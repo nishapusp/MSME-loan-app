@@ -19,7 +19,7 @@ db = Database()
 # Page config
 st.set_page_config(
     layout="wide", 
-    page_title="UBI MSME Loan Application",
+    page_title="MSME Loan Application",
     initial_sidebar_state="expanded"
 )
 
