@@ -171,7 +171,7 @@ def save_application_data():
 def main():
     initialize_session_state()
 
-    st.title("MSME Loan Application")
+    st.title("MSME Loan Application(Beta)")
 
     # Define sections
     sections = [
