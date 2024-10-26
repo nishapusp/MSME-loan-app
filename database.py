@@ -1,19 +1,60 @@
 import os
 from pymongo import MongoClient
+import urllib.parse
+import streamlit as st
+import certifi
 from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
 
 class Database:
+    class Database:
     def __init__(self):
-        # Get MongoDB connection string from environment variable
-        self.client = MongoClient(os.getenv('MONGODB_URI'))
-        self.db = self.client['msme_loan_db']
-    
+        try:
+            # URL encode the username and password
+            username = urllib.parse.quote_plus("puspendersharma")
+            password = urllib.parse.quote_plus("unionbank")
+            
+            # Construct the connection string with encoded credentials
+            connection_string = f"mongodb+srv://{username}:{password}@msme-loan-app.a0gwq.mongodb.net/msme_loan_db?retryWrites=true&w=majority"
+            
+            # Try getting connection string from Streamlit secrets first
+            if hasattr(st, "secrets"):
+                connection_string = st.secrets.get("MONGODB_URI", connection_string)
+            # Fall back to environment variable if available
+            elif os.getenv('MONGODB_URI'):
+                connection_string = os.getenv('MONGODB_URI')
+            
+            # Add SSL configuration and certifi certificate
+            self.client = MongoClient(
+                connection_string,
+                tls=True,
+                tlsCAFile=certifi.where(),
+                serverSelectionTimeoutMS=5000,
+                connectTimeoutMS=10000
+            )
+            
+            # Test the connection
+            self.client.admin.command('ping')
+            
+            self.db = self.client['msme_loan_db']
+            print("Database connection successful!")
+            
+        except Exception as e:
+            error_msg = f"Database connection error: {str(e)}"
+            print(error_msg)  # Print to console for debugging
+            st.error(error_msg)
+            raise e
+
     def save_application(self, application_data):
         """Save loan application data"""
-        return self.db.applications.insert_one(application_data)
+        try:
+            result = self.db.applications.insert_one(application_data)
+            return result
+        except Exception as e:
+            st.error(f"Error saving application: {str(e)}")
+            return None
     
     def update_application(self, application_id, updated_data):
         """Update existing application"""
