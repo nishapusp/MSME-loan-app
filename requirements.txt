@@ -6,4 +6,10 @@ PyMuPDF
 python-Levenshtein
 fuzzywuzzy
 python-dotenv
-pymongo
+pymongo[srv]
+certifi
+dnspython
+opencv-python-headless
+numpy
+uuid
+
