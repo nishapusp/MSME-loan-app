@@ -1,0 +1,15 @@
+streamlit
+pandas
+pytesseract
+Pillow
+PyMuPDF
+python-Levenshtein
+fuzzywuzzy
+python-dotenv
+pymongo[srv]
+certifi
+dnspython
+opencv-python-headless
+numpy
+uuid
+gridfs
